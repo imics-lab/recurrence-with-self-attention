@@ -36,6 +36,9 @@ model, verbose, graph = fn.get_args()
 train_X, train_Y, test_X, test_Y, valid_X, valid_Y = fn.load_data(cfg.TRAIN, cfg.TEST, index=0, header=0)
 
 if verbose:
+    print(tf. __version__)
+
+if verbose:
     print("Shapes loaded...")
     print("  train X", train_X.shape)
     print("  train Y", train_Y.shape)
