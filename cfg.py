@@ -17,14 +17,6 @@ GRAPH = False
 # ###############################
 # data files
 # ###############################
-#TRAIN = "data/har_train_25-50.csv" # use seq len 25 or 50
-#TEST = "data/har_test_25-50.csv" # use seq len 25 or 50
-#VALID =  "" # optional, if none given test set will be used for validation
-
-#TRAIN = "data/har_train_35.csv" # use seq len 35
-#TEST = "data/har_test_35.csv" # use seq len 35
-#VALID =  "" # optional, if none given test set will be used for validation
-
 TRAIN = "data/mobi_fall_train.csv" # 
 TEST = "data/mobi_fall_test.csv" # 
 VALID =  "" # optional, if none given test set will be used for validation
