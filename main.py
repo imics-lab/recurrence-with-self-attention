@@ -1,9 +1,13 @@
 #!/usr/bin/python3
 """
-Source code from the paper titled "Recurrence and Self-Attention vs the Transformer
-for Time-Series Classification: A Comparative Study."
+Authors: Alexander Katrompas, Theodoros Ntakouris, Vangelis Metsis
+Organization: Texas State University
+
+Driver code from the paper titled "Recurrence and Self-Attention vs the
+Transformer for Time-Series Classification: A Comparative Study."
 
 Usage: main.py [1|2] [-vg]
+       (assuming python3 in /usr/bin/)
 
 1: LSTM (default)
 2: Transformer
@@ -25,7 +29,10 @@ import cfg
 import functions as fn
 from selfAttn import SelfAttn
 
+# get command line arguments
 model, verbose, graph = fn.get_args()
+
+#load data
 train_X, train_Y, test_X, test_Y, valid_X, valid_Y = fn.load_data(cfg.TRAIN, cfg.TEST, index=0, header=0)
 
 if verbose:
@@ -112,6 +119,7 @@ else:
 if verbose:
     model.summary()
     print("Epochs:", cfg.EPOCHS)
+
 history = model.fit(train_X, train_Y,
                 #batch_size = cfg.BATCH_SIZE,
                 epochs=cfg.EPOCHS,

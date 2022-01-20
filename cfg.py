@@ -1,4 +1,10 @@
+"""
+Run Time Configuration
 
+Authors: Alexander Katrompas, Theodoros Ntakouris, Vangelis Metsis
+Organization: Texas State University
+
+"""
 
 # ###############################
 # command line parameter defaults
@@ -30,7 +36,7 @@ VALID =  "" # optional, if none given test set will be used for validation
 # General
 #BATCH_SIZE = 32
 SEQLENGTH = 200
-EPOCHS = 100
+EPOCHS = 2
 
 # LSTM
 LSTM = 256

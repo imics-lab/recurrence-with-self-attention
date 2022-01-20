@@ -1,7 +1,9 @@
 """
-Supporting functions
+Supporting stand-alone functions
 
-Author: Alex katrompas
+Authors: Alexander Katrompas, Theodoros Ntakouris, Vangelis Metsis
+Organization: Texas State University
+
 """
 
 # python libs
@@ -13,9 +15,22 @@ from tensorflow.keras import layers
 
 # local libs
 import cfg
-from transformer_encoder import TransformerEncoder
+#from transformer_encoder import TransformerEncoder
 
 def transformer_encoder(inputs, head_size, num_heads, ff_dim, dropout=0):
+    """
+    TransformerEncoder for time-series encoder, conforming to the
+    transformer architecture from Attention Is All You Need (Vaswani 2017)
+    https://arxiv.org/abs/1706.03762
+
+    @param (int) num_heads: Number of Attention Heads
+    @param (int) head_size : Head Size
+    @param (int) ff_dim: Feed Forward Dimension
+    @param (float) dropout : Dropout (between 0 and .99)
+    
+    Return: transformer encoder
+    """
+
     # Normalization and Attention
     x = layers.LayerNormalization(epsilon=1e-6)(inputs)
     x = layers.MultiHeadAttention(
@@ -31,6 +46,16 @@ def transformer_encoder(inputs, head_size, num_heads, ff_dim, dropout=0):
     return x + res    
 
 def print_setup(model, verbose, graph):
+    """
+    Display description of model and parameters.
+    
+    @param (int) model : model, either transformer or lstm
+    @param (bool) verbose : verbose mode during training
+    @param (bool) graph : display training graph
+    
+    Return: none
+    """
+
     print()
     print("Executing...")
     if model == 1:
@@ -48,6 +73,21 @@ def print_setup(model, verbose, graph):
     print()
 
 def get_args():
+    """
+    Get command line arguments at program start.
+    Return: the set flags: model, verbose, graph
+
+    Usage: main.py [1|2] [-vg]
+           (assuming python3 in /usr/bin/)
+
+    1: LSTM (default)
+    2: Transformer
+
+    v: verbose mode (optional)
+    g: graphing mode (optional)
+
+    """
+    
     # set optional defaults in case of error or no parameters
     model = cfg.MODEL
     verbose = cfg.VERBOSE
@@ -83,9 +123,11 @@ def normalize(data, np_array=False, scaled=False):
     """
     Normalize and optionally scale a dataset.
     
-    Parameters: Pandas DataFrame or Numpy,
-                optional np_array flag for return type, optional scale flag
-    Processing: Will normalize and optionally scale the dataset
+    @param (DataFrame or numpy array) data: 2D DataFrame or numpy array
+    @param (bool) np_array : optional np_array flag (default = false)
+                             forces return type to numpy array
+    @param (bool) scale : optionally scale the dataset (default = false)
+
     Return: Pandas DataFrame or Numpy array with normalized/scaled data
     """
     # ensure floats
@@ -122,10 +164,12 @@ def getio(data, x_cols, np_array=False):
     """
     Slice a dataset into input and output features based on the last x_cols
     
-    Parameters: Pandas DataFrame or Numpy array, number of column from left to right
-           that are the input columns.
-    Processing: Will slice into two sets, input and output data
-    Return: Two data sets of the same type sent in, input and output
+    @param (DataFrame or numpy array) data: 2D DataFrame or numpy array
+    @param (int) x_cols: number of column from left to right (input features)
+    @param (bool) np_array : optional np_array flag (default = false)
+                             forces return type to numpy array
+
+    Return: Pandas DataFrame or Numpy array with normalized/scaled data
     """
     total_cols = column_count(data)
     if len(data.shape) != 2:
@@ -151,6 +195,22 @@ def getio(data, x_cols, np_array=False):
     return X, Y
 
 def load_data(train_name, test_name, valid_name="", labels = 1, norm = False, index = None, header = None):
+    """
+    Load a dataset from csv. File is assumed to be in the form
+    timesteps (rows) X features + labels (columns). All features are assumed to
+    be before all labels (i.e. labels are the last columns)
+    
+    @param (string) train_name : training file name
+    @param (string) test_name : test file name
+    @param (string) valid_name="" : validation file name (optional)
+    @param (int) labels = 1 : number of features
+    @param (bool) norm = False : normalize the data
+    @param (int) index = None : presence of an index (none or column number)
+    @param (int) header = None : presence of aheader (none or row number)
+
+    Return: datasets as numpy arrays
+    """
+
     train = pd.read_csv(train_name, index_col=index, header=header).astype(float, errors='ignore')
     test = pd.read_csv(test_name, index_col=index, header=header).astype(float, errors='ignore')
     if valid_name:
@@ -188,8 +248,9 @@ def shape_3D_data(data, timesteps):
     """
     Resape 2D data into 3D data of groups of 2D timesteps
     
-    Parameters: Pandas DataFrame or Numpy 3D array, number of timesteps/group
-    Processing: Reshape 2D data into 3D data of array of 2D 
+    @param (DataFrame or numpy array) data: 2D DataFrame or numpy array
+    @param (int) timesteps: number of timesteps/group
+
     Return: The reshaped data as numpy 3D array
     """
 
