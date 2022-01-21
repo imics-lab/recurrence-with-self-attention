@@ -18,6 +18,7 @@ g: graphing mode (optional)
 """
 
 # python libs
+from sys import version
 import silence_tensorflow.auto
 import tensorflow as tf 
 from tensorflow.keras import layers
@@ -29,14 +30,14 @@ import cfg
 import functions as fn
 from selfAttn import SelfAttn
 
+print("TensorFlow Version:", tf. __version__)
+print("Python Version:", version)
+
 # get command line arguments
 model, verbose, graph = fn.get_args()
 
 #load data
 train_X, train_Y, test_X, test_Y, valid_X, valid_Y = fn.load_data(cfg.TRAIN, cfg.TEST, index=0, header=0)
-
-if verbose:
-    print(tf. __version__)
 
 if verbose:
     print("Shapes loaded...")
