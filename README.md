@@ -1,12 +1,14 @@
 # Recurrence with Self Attention versus Time Series Transformer
 
 Code from the paper titled "Recurrence and Self-Attention vs the
-Transformer for Time-Series Classification: A Comparative Study."
+Transformer for Time-Series Classification: A Comparative Study,"
+published in the 20th International Conference on Artificial Intelligence in
+Medicine, AIME 2022, by Springer Nature."
 
 ## Requirements
 
-Python 3.7  
-Tensor Flow 2.4  
+Python 3.7
+Tensor Flow 2.4
 
 
 ## Configuration
@@ -16,11 +18,11 @@ All configurable parameters are controlled from cfg.py
 
 ## Usage
 
-Usage: main.py [1|2] [-vg]  
-       (assuming python3 in /usr/bin/)  
+Usage: main.py [1|2] [-vg]
+       (assuming python3 in /usr/bin/)
 
-1: LSTM (default)  
-2: Transformer  
+1: LSTM (default)
+2: Transformer
 
-v: verbose mode (optional)  
-g: graphing mode (optional)  
+v: verbose mode (optional)
+g: graphing mode (optional)
