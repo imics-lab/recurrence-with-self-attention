@@ -20,13 +20,14 @@ g: graphing mode (optional)
 # python libs
 from sys import version
 import silence_tensorflow.auto
-import tensorflow as tf 
+import tensorflow as tf
+from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras import layers
 from matplotlib import pyplot
 from numpy import argmax
 
 # local libs
-import cfg
+import cfg #importing local library cfg
 import functions as fn
 from selfAttn import SelfAttn
 
@@ -37,7 +38,7 @@ print("Python Version:", version)
 model, verbose, graph = fn.get_args()
 
 #load data
-train_X, train_Y, test_X, test_Y, valid_X, valid_Y = fn.load_data(cfg.TRAIN, cfg.TEST, index=0, header=0)
+train_X, train_Y, test_X, test_Y, valid_X, valid_Y = fn.load_data(cfg.TRAIN, cfg.TEST, index=cfg.INDEX, header=cfg.HEADER)
 
 if verbose:
     print("Shapes loaded...")
@@ -84,13 +85,13 @@ if model == 1:
     
     if cfg.LSTM_ATTENTION:
         model.add(SelfAttn(cfg.SEQLENGTH))
+        model.add(layers.Dense(cfg.DENSE1, activation='sigmoid'))
+        model.add(layers.Dense(cfg.DENSE2, activation='sigmoid'))
     else:
         model.add(layers.TimeDistributed(layers.Dense(cfg.DENSE1, activation='sigmoid')))
+        model.add(layers.Dense(cfg.DENSE2, activation='sigmoid'))
     model.add(layers.Dropout(cfg.DROPOUT))
 
-    model.add(layers.Dense(cfg.DENSE2, activation='sigmoid'))
-    model.add(layers.Dropout(cfg.DROPOUT))
-    
     model.add(layers.Dense(cfg.OUTPUT, activation='sigmoid' if cfg.OUTPUT == 1 else 'softmax'))
 
 elif model == 2:
@@ -124,12 +125,14 @@ if verbose:
     model.summary()
     print("Epochs:", cfg.EPOCHS)
 
+early_stopping = EarlyStopping(patience=cfg.PATIENCE, restore_best_weights=True, verbose=verbose)
 history = model.fit(train_X, train_Y,
                 #batch_size = cfg.BATCH_SIZE,
                 epochs=cfg.EPOCHS,
                 verbose=verbose,
-                shuffle=False,
-                validation_data=(test_X, test_Y))
+                shuffle=cfg.SHUFFLE,
+                validation_data=(test_X, test_Y),
+                callbacks=[early_stopping])
 
 #############################
 # Graphing Loss
